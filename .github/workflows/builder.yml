@@ -42,7 +42,7 @@ jobs:
         working-directory: ./web
         run: |
           yarn --version
-          yarn install --immutable
+          yarn install
           yarn build
 
       - name: 上传前端产物
