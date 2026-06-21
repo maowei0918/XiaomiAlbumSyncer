@@ -1,0 +1,3 @@
+xiaomi-album-syncer:
+  server:
+    port: 10086

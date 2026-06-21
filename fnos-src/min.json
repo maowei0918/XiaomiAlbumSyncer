@@ -1,0 +1,17 @@
+{
+  "packageName": "xiaomi-album-syncer",
+  "displayName": "小米云相册同步",
+  "displayNameEn": "Xiaomi Album Syncer",
+  "version": "1.0.0",
+  "description": "全量/增量/定时下载小米云服务中的相册/录音到本地",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/maowei0918/XiaomiAlbumSyncer",
+  "author": "maowei0918",
+  "maintainers": [],
+  "arch": ["arm64", "amd64"],
+  "targetOS": [],
+  "categories": ["工具"],
+  "icon": "",
+  "screenshot": "",
+  "dependencies": []
+}
