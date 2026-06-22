@@ -201,13 +201,6 @@ class CrontabController(private val service: CrontabService) {
             }) {
                 allScalarFields()
             }
-            // 获取最新的归档记录
-            archiveRecords({
-                filter { orderBy(table.archiveTime.desc()) }
-                batch(1)
-                limit(5)
-            }) {
-                allScalarFields()
             }
         }
 

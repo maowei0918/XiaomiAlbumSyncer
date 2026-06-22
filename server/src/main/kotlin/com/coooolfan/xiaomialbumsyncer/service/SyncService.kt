@@ -100,12 +100,6 @@ class SyncService(
         // 云端有但未成功下载过 → 新增
         val added = cloudAssets.filter { it.id !in downloadedAssetIds }
 
-        // 查询已归档且云端已删除的资产 ID（这些不应该被当作"需要删除"）
-        val archivedAndDeletedFromCloudIds = sql.createQuery(ArchiveDetail::class) {
-            where(table.archiveRecord.crontabId eq crontabId)
-            where(table.isDeletedFromCloud eq true)
-            select(table.assetId)
-        }.execute().toSet()
 
         // 已成功下载过但云端已不存在 → 删除（排除已归档的资产）
         val deleted = downloadedAssets
