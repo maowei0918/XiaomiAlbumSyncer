@@ -104,7 +104,6 @@ class SyncService(
         // 已成功下载过但云端已不存在 → 删除（排除已归档的资产）
         val deleted = downloadedAssets
             .filter { it.id !in cloudAssetMap }
-            .filter { it.id !in archivedAndDeletedFromCloudIds }
             .map { asset ->
                 val details = sql.createQuery(CrontabHistoryDetail::class) {
                     where(table.crontabHistory.crontabId eq crontabId)
