@@ -39,7 +39,4 @@ interface Crontab {
     @OneToMany(mappedBy = "crontab")
     val syncRecords: List<SyncRecord>
 
-    @OneToMany(mappedBy = "crontab")
-    val archiveRecords: List<ArchiveRecord>
-
 }
