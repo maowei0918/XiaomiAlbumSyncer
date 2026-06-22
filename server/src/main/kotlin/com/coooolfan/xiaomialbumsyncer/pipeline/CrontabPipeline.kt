@@ -35,7 +35,6 @@ class CrontabPipeline(
     private val fileService: FileService,
     private val postProcessingCoordinator: PostProcessingCoordinator,
     private val xiaoMiApi: com.coooolfan.xiaomialbumsyncer.xiaomicloud.XiaoMiApi,
-    private val archiveService: ArchiveService,
 ) {
 
     private val log = LoggerFactory.getLogger(CrontabPipeline::class.java)
@@ -201,17 +200,6 @@ class CrontabPipeline(
             deletedCount = deletedCount,
             updatedCount = updatedCount
         )
-
-        // 同步完成后，如果启用了归档，自动执行归档
-        if (crontab.config.archiveMode != ArchiveMode.DISABLED) {
-            try {
-                log.info("开始自动归档，模式: ${crontab.config.archiveMode}")
-                val archiveRecordId = archiveService.executeArchive(crontab.id, true)
-                log.info("自动归档完成，归档记录 ID=$archiveRecordId")
-            } catch (e: Exception) {
-                log.warn("自动归档跳过或失败: ${e.message}")
-            }
-        }
 
         // 异步发送通知
         if (crontab.config.notify)
