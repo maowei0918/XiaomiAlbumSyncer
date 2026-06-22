@@ -201,7 +201,6 @@ class CrontabPipeline(
             updatedCount = updatedCount
         )
 
-        // 异步发送通知
         if (crontab.config.notify)
             CoroutineScope(Dispatchers.IO).launch { notifyService.send(crontab, success, total) }
 

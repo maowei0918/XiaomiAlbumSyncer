@@ -55,12 +55,6 @@ data class CrontabConfig(
     val syncFolder: String = "sync",                // 同步文件夹名称（相对于 targetPath）
 
     /**
-     * 归档模式
-     * DISABLED: 关闭归档，不执行任何归档操作
-     * TIME: 基于时间归档，归档超过指定天数的照片
-     * SPACE: 基于空间阈值归档，当云端空间不足时自动归档旧照片
-     * 默认为 DISABLED
-     */
 
     val notify: Boolean = true,
 )
