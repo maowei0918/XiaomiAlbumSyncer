@@ -70,12 +70,9 @@ const recentSyncRecords = computed(() => {
 })
 
 // 获取最新的归档记录（按时间排序）
-const recentArchiveRecords = computed(() => {
   const crontabAny = props.crontab as Record<string, unknown>
   const list = [
-    ...((crontabAny.archiveRecords as Array<{ archiveTime: string; archivedCount: number }>) || []),
   ]
-  list.sort((a, b) => (a.archiveTime < b.archiveTime ? 1 : -1))
   return list
 })
 
@@ -86,18 +83,14 @@ function getStatsForHistory(history: (typeof recentHistories.value)[0]) {
   const syncRecord = historyIndex >= 0 ? recentSyncRecords.value[historyIndex] : undefined
 
   // 归档记录通过时间范围匹配（归档可能在同步完成后执行）
-  const archiveRecord = recentArchiveRecords.value.find((ar) => {
-    const archiveTime = new Date(ar.archiveTime).getTime()
     const startTime = new Date(history.startTime).getTime()
     const endTime = history.endTime ? new Date(history.endTime).getTime() : Date.now()
-    return archiveTime >= startTime && archiveTime <= endTime + 60000
   })
 
   return {
     addedCount: syncRecord?.addedCount ?? 0,
     deletedCount: syncRecord?.deletedCount ?? 0,
     updatedCount: syncRecord?.updatedCount ?? 0,
-    archivedCount: archiveRecord?.archivedCount ?? 0,
   }
 }
 
@@ -107,7 +100,6 @@ function formatStatsText(stats: ReturnType<typeof getStatsForHistory>): string {
   if (stats.addedCount > 0) parts.push(`${stats.addedCount}新增`)
   if (stats.deletedCount > 0) parts.push(`${stats.deletedCount}删除`)
   if (stats.updatedCount > 0) parts.push(`${stats.updatedCount}修改`)
-  if (stats.archivedCount > 0) parts.push(`${stats.archivedCount}归档`)
   return parts.length > 0 ? parts.join('，') : '无变化'
 }
 
@@ -350,11 +342,7 @@ onUnmounted(() => {
               :value="crontab.config.syncMode === 'SYNC_ALL_CHANGES' ? '同步所有变化' : '仅新增'"
             />
             <Tag
-              :severity="crontab.config?.archiveMode && crontab.config.archiveMode !== 'DISABLED' ? 'success' : 'secondary'"
               :value="
-                crontab.config?.archiveMode === 'TIME'
-                  ? `时间归档(${crontab.config.archiveDays}天)`
-                  : crontab.config?.archiveMode === 'SPACE'
                     ? `空间归档(${crontab.config.cloudSpaceThreshold}%)`
                     : '关闭归档'
               "

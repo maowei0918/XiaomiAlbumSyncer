@@ -132,16 +132,9 @@ export function useCronForm(getDefaultAccountId: () => number) {
 
     // 归档配置验证
     const config = cronForm.value.config
-    if (config.archiveMode === 'TIME') {
-      const archiveDays = config.archiveDays
-      if (!Number.isInteger(archiveDays) || archiveDays <= 0) {
-        errors.archiveDays = '保留天数必须是正整数'
-      } else if (archiveDays > 365) {
-        errors.archiveDays = '保留天数不能超过365天'
       }
     }
 
-    if (config.archiveMode === 'SPACE') {
       const threshold = config.cloudSpaceThreshold
       if (!Number.isInteger(threshold) || threshold < 1 || threshold > 100) {
         errors.cloudSpaceThreshold = '空间阈值必须在 1-100 之间'
