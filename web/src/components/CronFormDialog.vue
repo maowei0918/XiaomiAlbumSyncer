@@ -13,6 +13,7 @@ import Message from 'primevue/message'
 import ExpressionPathHelp from '@/components/ExpressionPathHelp.vue'
 import CronHelp from '@/components/CronHelp.vue'
 import SyncModeSelector from '@/components/SyncModeSelector.vue'
+import ArchiveModeSelector from '@/components/ArchiveModeSelector.vue'
 import type { LocalCronForm } from '@/utils/crontabForm'
 
 const props = defineProps<{
@@ -508,3 +509,69 @@ onBeforeUnmount(() => {
         <!-- 归档配置面板 -->
         <Panel header="归档配置" toggleable collapsed class="mt-4">
           <div class="space-y-4">
+            <ArchiveModeSelector
+              v-model="form.config.archiveMode"
+              v-model:archiveDays="form.config.archiveDays"
+              v-model:cloudSpaceThreshold="form.config.cloudSpaceThreshold"
+              :archiveDaysError="formErrors.archiveDays"
+              :cloudSpaceThresholdError="formErrors.cloudSpaceThreshold"
+              @validate="handleValidate"
+            />
+
+            <div
+              v-if="form.config.archiveMode !== 'DISABLED'"
+              class="space-y-4 pt-4 border-t border-slate-200"
+            >
+              <div class="space-y-2">
+                <label class="block text-xs font-medium text-slate-500">归档文件夹名称</label>
+                <InputText v-model="form.config.backupFolder" placeholder="backup" class="w-full" />
+                <div class="text-[10px] text-slate-400">
+                  相对于保存路径的文件夹名称，用于存放归档的照片
+                </div>
+              </div>
+
+              <div class="space-y-2">
+                <div class="flex items-center gap-2 text-xs text-slate-600">
+                  <ToggleSwitch v-model="form.config.deleteCloudAfterArchive" />
+                  <span>归档后删除云端</span>
+                </div>
+                <div
+                  v-if="form.config.deleteCloudAfterArchive"
+                  class="flex items-start gap-2 p-2 bg-amber-50 border border-amber-200 rounded text-[10px] text-amber-700"
+                >
+                  <i class="pi pi-exclamation-triangle text-amber-500 mt-0.5" />
+                  <span>
+                    警告：启用此选项后，归档的照片将从小米云端永久删除，请确保本地备份安全可靠
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Panel>
+
+        <div class="flex items-center justify-between pt-1">
+          <div class="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
+            <ToggleSwitch v-model="form.enabled" />
+            <span>启用</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <Button label="取消" severity="secondary" text @click="closeDialog" />
+            <Button
+              :label="props.isEditing ? '保存' : '创建'"
+              :loading="props.saving"
+              @click="emit('submit')"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div
+        v-if="showExpressionHelp || showCronHelp"
+        class="flex-1 border-l border-slate-100 dark:border-slate-800 pl-8 hidden lg:block self-stretch min-w-0"
+      >
+        <ExpressionPathHelp v-if="showExpressionHelp" />
+        <CronHelp v-if="showCronHelp" />
+      </div>
+    </div>
+  </Dialog>
+</template>
